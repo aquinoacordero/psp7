@@ -10,27 +10,28 @@ import java.util.logging.Logger;
 public class Escribir extends Thread {
 
     Buzon b;
+    String escritor;
 
-    Escribir(Buzon b) {
+    Escribir(Buzon b, String escritor) {
         this.b = b;
+        this.escritor = escritor;
     }
 
     @Override
     public void run() {
-        if (b.getMensaje().length() > 0) {
-            try {
-                wait();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Leer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-
+        try {
+            Thread.sleep(1000);
+            
             synchronized (b) {
-                System.out.println("Escribiendo mensaje");
+                if (b.getMensaje().length() > 0) {b.wait();}
                 b.setMensaje("hola");
-                notify();
+                System.out.println(escritor + " escribiendo mensaje: "+b.getMensaje());
+                b.notify();
             }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Escribir.class.getName()).log(Level.SEVERE, null, ex);
         }
+
 
     }
 }

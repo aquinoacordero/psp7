@@ -6,12 +6,10 @@ package ejercicio7;
  */
 public class Buzon {
 
-    int contenido;
     String mensaje;
 
     public Buzon(String mensaje) {
         this.mensaje = mensaje;
-
     }
 
     public String getMensaje() {

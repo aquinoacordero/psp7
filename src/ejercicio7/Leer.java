@@ -10,26 +10,31 @@ import java.util.logging.Logger;
 public class Leer extends Thread {
 
     Buzon b;
+    String lector;
 
-    Leer(Buzon b) {
+    public Leer(Buzon b, String lector) {
         this.b = b;
+        this.lector = lector;
     }
 
     @Override
     public void run() {
-        if (b.getMensaje() == "") {
-            try {
-                wait();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Leer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
+        try {
+            Thread.sleep(1000);
+            
             synchronized (b) {
-                System.out.println("Mensaje: " + b.getMensaje());
+                if (b.getMensaje() == "") {
+                    b.wait();
+                }
+                System.out.println(lector + " leyendo mensaje: " + b.getMensaje());
                 b.setMensaje("");
                 System.out.println("Mensaje: " + b.getMensaje());
-                notify();
+                b.notify();
             }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Leer.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
+
 }
